@@ -1,2 +1,74 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<section class="homeSection1">
+  <div class="section1TitleBar">
+    <h1>{{section1Title}}</h1>
+    <p>{{section1Content}}</p>
+    <hr />
+  </div>
+</section>
+<section class="homeSection2">
+  <div class="homeSection2_Inner">
+    <h2>Questions</h2>
+    <div class="questions">
+      <div class="question">
+        <div class="questionHeader">
+          <div class="questionVotes">
+            <button class="voteBtn">&uparrow;</button>
+            <p>2</p>
+            <button class="voteBtn">&downarrow;</button>
+          </div>
+          <div class="questionContent">
+            <h3>Question title</h3>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa
+              provident harum vitae, unde dolores maiores, neque quas similique
+              pariatur laudantium temporibus quis recusandae. Minus enim tempore
+              corporis officiis eaque itaque natus commodi blanditiis eum, unde
+              eos consequuntur aliquam exercitationem neque ratione facere
+              possimus tenetur, esse vel. Natus vel earum magni cupiditate
+              quidem minima rem culpa in ea amet eos impedit, nostrum numquam
+              labore alias inventore magnam ullam quos cum reprehenderit at
+              debitis saepe? Provident praesentium ullam eos consequatur maxime
+              aspernatur eveniet dolorem ipsum, expedita cumque, reiciendis
+              neque accusantium fuga laborum ea in? Dolor omnis reiciendis
+              incidunt delectus ab illo rem blanditiis iste, nulla pariatur
+              ullam perspiciatis illum laboriosam hic praesentium voluptatibus
+              sed quidem impedit ducimus molestias! Iusto laboriosam omnis
+              cumque dolorem, necessitatibus officia saepe ipsam tempore
+              doloribus possimus eveniet sint maxime repudiandae hic. Unde
+              deserunt quos modi fuga, cum nobis ducimus sit a. Officiis ab quam
+              optio cupiditate veritatis deleniti sit dolore ipsa praesentium,
+              iusto et explicabo minus nostrum eveniet aliquam quis in omnis
+              tempora! Modi non id nisi ipsa consectetur iste saepe qui,
+              deleniti, ex fugiat obcaecati quibusdam optio. Vitae impedit sint
+              libero nemo vel eaque distinctio, aut, iusto reiciendis sit quidem
+              est dignissimos velit minima provident recusandae animi?</p>
+          </div>
+        </div>
+        <div class="questionViews">
+          <p>Views: 100</p>
+          <p>Answers: 5</p>
+          <p>Asked by: <a href="/users/1">User</a></p>
+          <p>Asked on: 2023-10-01</p>
+        </div>
+      </div>
+      {{!-- {{#each questions}}
+      <div class="question">
+        <h3><a href="/questions/{{id}}">{{title}}</a></h3>
+        <p>{{content}}</p>
+        <p>Asked by: {{author}}</p>
+      </div>
+    {{/each}} --}}
+    </div>
+  </div>
+  <aside>
+    <div class="sidebar">
+      <h3>Dumbest questions asked</h3>
+      {{!-- {{#each questions}}
+      <div class="question">
+        <h3><a href="/questions/{{id}}">{{title}}</a></h3>
+        <p>{{content}}</p>
+        <p>Asked by: {{author}}</p>
+      </div>
+    {{/each}} --}}
+    </div>
+  </aside>
+</section>
