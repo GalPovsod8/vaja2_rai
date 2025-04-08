@@ -1,30 +1,10 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var userController = require('../controllers/userController.js');
+var userController = require("../controllers/userController.js");
+const { ensureAuthenticated } = require("../middleware/auth.js");
+var authController = require("../controllers/authController.js");
 
-/*
- * GET
- */
-router.get('/', userController.list);
-
-/*
- * GET
- */
-router.get('/:id', userController.show);
-
-/*
- * POST
- */
-router.post('/', userController.create);
-
-/*
- * PUT
- */
-router.put('/:id', userController.update);
-
-/*
- * DELETE
- */
-router.delete('/:id', userController.remove);
+router.get("/users/:id", authController.showProfile);
+router.post("/users/:id", ensureAuthenticated, authController.updateProfile);
 
 module.exports = router;

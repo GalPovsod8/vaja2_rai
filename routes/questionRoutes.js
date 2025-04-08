@@ -1,30 +1,14 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var questionController = require('../controllers/questionController.js');
+var questionController = require("../controllers/questionController.js");
 
-/*
- * GET
- */
-router.get('/', questionController.list);
-
-/*
- * GET
- */
-router.get('/:id', questionController.show);
-
-/*
- * POST
- */
-router.post('/', questionController.create);
-
-/*
- * PUT
- */
-router.put('/:id', questionController.update);
-
-/*
- * DELETE
- */
-router.delete('/:id', questionController.remove);
+router.get("/questions", questionController.listQuestions);
+router.get("/questions/hot", questionController.hotQuestions);
+router.get("/questions/:id", questionController.showQuestion);
+router.post(
+  "/questions",
+  ensureAuthenticated,
+  questionController.createQuestion
+);
 
 module.exports = router;

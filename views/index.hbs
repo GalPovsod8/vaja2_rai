@@ -10,12 +10,12 @@
     <h2>Questions</h2>
     <div class="questions">
       <div class="question">
+        <div class="questionVotes">
+          <button class="voteBtn">&uparrow;</button>
+          <p>2</p>
+          <button class="voteBtn">&downarrow;</button>
+        </div>
         <div class="questionHeader">
-          <div class="questionVotes">
-            <button class="voteBtn">&uparrow;</button>
-            <p>2</p>
-            <button class="voteBtn">&downarrow;</button>
-          </div>
           <div class="questionContent">
             <h3>Question title</h3>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa
@@ -42,12 +42,16 @@
               libero nemo vel eaque distinctio, aut, iusto reiciendis sit quidem
               est dignissimos velit minima provident recusandae animi?</p>
           </div>
-        </div>
-        <div class="questionViews">
-          <p>Views: 100</p>
-          <p>Answers: 5</p>
-          <p>Asked by: <a href="/users/1">User</a></p>
-          <p>Asked on: 2023-10-01</p>
+          <div class="questionViews">
+            <div class="questionViews_counts">
+              <p>Views: 100</p>
+              <p>Answers: 5</p>
+            </div>
+            <div class="questionViews_info">
+              <p>Asked on: 01.10.2024 at 23:00:00</p>
+              <a href="/users/1">User</a>
+            </div>
+          </div>
         </div>
       </div>
       {{!-- {{#each questions}}

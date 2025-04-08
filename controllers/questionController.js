@@ -1,126 +1,83 @@
-var QuestionModel = require('../models/questionModel.js');
+const Question = require("../models/questionModel");
+const Answer = require("../models/answerModel");
+const User = require("../models/userModel");
 
-/**
- * questionController.js
- *
- * @description :: Server-side logic for managing questions.
- */
-module.exports = {
+exports.listQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find()
+      .populate("author", "username profileImage")
+      .sort({ createdAt: -1 });
+    res.render("questions/list", { questions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error: napaka pri pridobivanju vprašanj");
+  }
+};
 
-    /**
-     * questionController.list()
-     */
-    list: function (req, res) {
-        QuestionModel.find(function (err, questions) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting question.',
-                    error: err
-                });
-            }
+exports.showQuestion = async (req, res) => {
+  try {
+    const question = await Question.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { views: 1 } },
+      { new: true }
+    )
+      .populate("author", "username profileImage stats")
+      .populate({
+        path: "answers",
+        populate: { path: "author", select: "username profileImage stats" },
+      })
+      .populate("acceptedAnswer");
 
-            return res.json(questions);
-        });
-    },
+    if (!question) return res.status(404).send("Question not found");
 
-    /**
-     * questionController.show()
-     */
-    show: function (req, res) {
-        var id = req.params.id;
+    // Sortitanej odgovorov
+    question.answers.sort((a, b) => {
+      if (a._id.equals(question.acceptedAnswer)) return -1;
+      if (b._id.equals(question.acceptedAnswer)) return 1;
+      return b.votes - a.votes || b.createdAt - a.createdAt;
+    });
 
-        QuestionModel.findOne({_id: id}, function (err, question) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting question.',
-                    error: err
-                });
-            }
+    res.render("questions/show", { question });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
 
-            if (!question) {
-                return res.status(404).json({
-                    message: 'No such question'
-                });
-            }
+exports.createQuestion = async (req, res) => {
+  try {
+    const { title, content, tags } = req.body;
+    const question = new Question({
+      title,
+      content,
+      author: req.user._id,
+      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+    });
 
-            return res.json(question);
-        });
-    },
+    await question.save();
 
-    /**
-     * questionController.create()
-     */
-    create: function (req, res) {
-        var question = new QuestionModel({
-			text : req.body.text,
-			userId : req.body.userId,
-			views : req.body.views
-        });
+    // Posodobi uporabniški statistiko
+    await User.findByIdAndUpdate(req.user._id, {
+      $inc: { "stats.questionsAsked": 1 },
+    });
 
-        question.save(function (err, question) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating question',
-                    error: err
-                });
-            }
+    res.redirect(`/questions/${question._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
 
-            return res.status(201).json(question);
-        });
-    },
+exports.hotQuestions = async (req, res) => {
+  try {
+    const hotQuestions = await Question.find()
+      .sort({ hotness: -1, createdAt: -1 })
+      .limit(10)
+      .populate("author", "username profileImage");
 
-    /**
-     * questionController.update()
-     */
-    update: function (req, res) {
-        var id = req.params.id;
-
-        QuestionModel.findOne({_id: id}, function (err, question) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting question',
-                    error: err
-                });
-            }
-
-            if (!question) {
-                return res.status(404).json({
-                    message: 'No such question'
-                });
-            }
-
-            question.text = req.body.text ? req.body.text : question.text;
-			question.userId = req.body.userId ? req.body.userId : question.userId;
-			question.views = req.body.views ? req.body.views : question.views;
-			
-            question.save(function (err, question) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating question.',
-                        error: err
-                    });
-                }
-
-                return res.json(question);
-            });
-        });
-    },
-
-    /**
-     * questionController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        QuestionModel.findByIdAndRemove(id, function (err, question) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the question.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
-        });
-    }
+    res.render("questions/hot", { questions: hotQuestions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 };
