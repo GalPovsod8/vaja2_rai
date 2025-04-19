@@ -13,9 +13,9 @@
       {{#each questions}}
         <div class="question-card">
           <div class="question-aside">
-            <a href="/voteUp">&uparrow;</a>
-            <span>{{votes}}</span>
-            <a href="/voteDown">&downarrow;</a>
+            <button class="vote-btn" data-type="up" data-id="{{_id}}">&uparrow;</button>
+            <span class="vote-count">{{votes}}</span>
+            <button class="vote-btn" data-type="down" data-id="{{_id}}">&downarrow;</button>
           </div>
           <div class="question-inner">
             <div class="question-content">
@@ -54,3 +54,33 @@
       {{/each}}
   </div>
 </section>
+
+<script>
+  document.querySelectorAll(".vote-btn").forEach(button => {
+    button.addEventListener("click", async (e) => {
+      const type = e.target.getAttribute("data-type");
+      const questionId = e.target.getAttribute("data-id");
+
+      try {
+        const response = await fetch(`/questions/${questionId}/vote/ajax`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ type }),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            e.target.closest(".question-aside").querySelector(".vote-count").textContent = result.votes;
+        } else {
+            const error = await response.text();
+            alert(error);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error with voting.");
+      }
+    });
+  });
+</script>

@@ -1,5 +1,6 @@
 const passport = require("passport");
 const User = require("../models/userModel");
+const Question = require("../models/questionModel");
 const multer = require("multer");
 const path = require("path");
 
@@ -88,25 +89,30 @@ exports.logout = (req, res, next) => {
 exports.showProfile = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .select("-password")
       .populate({
         path: "questions",
-        select: "title createdAt",
-        options: { limit: 5, sort: { createdAt: -1 } },
+        options: { sort: { createdAt: -1 }, limit: 5 },
       })
       .populate({
         path: "answers",
-        select: "content createdAt question",
-        populate: { path: "question", select: "title" },
-        options: { limit: 5, sort: { createdAt: -1 } },
+        populate: {
+          path: "question",
+          select: "title",
+        },
+        options: { sort: { createdAt: -1 }, limit: 5 },
       });
 
-    if (!user) return res.status(404).send("User not found");
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
-    res.render("auth/profile", { user });
+    res.render("auth/profile", {
+      title: `${user.username}'s Profile`,
+      user: user,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server error");
   }
 };
 

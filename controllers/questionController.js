@@ -46,6 +46,7 @@ exports.showQuestion = async (req, res) => {
 exports.createQuestion = async (req, res) => {
   try {
     const { title, content } = req.body;
+
     const question = new Question({
       title,
       content,
@@ -54,9 +55,9 @@ exports.createQuestion = async (req, res) => {
 
     await question.save();
 
-    // Posodobi uporabniški statistiko
     await User.findByIdAndUpdate(req.user._id, {
       $inc: { "stats.questionsAsked": 1 },
+      $push: { questions: question._id },
     });
 
     res.redirect(`/questions/${question._id}`);
@@ -77,5 +78,75 @@ exports.hotQuestions = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
+  }
+};
+
+exports.voteAjax = async (req, res) => {
+  const questionId = req.params.id;
+  const userId = req.user._id;
+  const { type } = req.body;
+
+  try {
+    const question = await Question.findById(questionId);
+
+    if (!question) {
+      return res.status(404).send("Question not found");
+    }
+
+    if (question.voters.includes(userId)) {
+      if (type === "down") {
+        question.voters = question.voters.filter(
+          (voterId) => !voterId.equals(userId)
+        );
+        if (question.votes > 0) {
+          question.votes -= 1;
+        }
+      } else if (type === "up") {
+        question.voters = question.voters.filter(
+          (voterId) => !voterId.equals(userId)
+        );
+        question.votes += 1;
+      }
+    } else {
+      if (type === "up") {
+        question.votes += 1;
+        question.voters.push(userId);
+      } else if (type === "down" && question.votes > 0) {
+        question.votes -= 1;
+        question.voters.push(userId);
+      } else {
+        return res.status(400).send("Invalid vote type");
+      }
+    }
+
+    await question.save();
+
+    res.json({ votes: question.votes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error voting");
+  }
+};
+
+exports.postAnswer = async (req, res) => {
+  const { id } = req.params;
+  const { content } = req.body;
+  const user = req.user;
+
+  try {
+    const answer = await Answer.create({
+      content,
+      author: user._id,
+      createdAt: new Date(),
+      votes: 0,
+      question: id,
+    });
+
+    await Question.findByIdAndUpdate(id, { $push: { answers: answer._id } });
+
+    res.redirect(`/questions/${id}`);
+  } catch (err) {
+    console.error("Error posting answer:", err);
+    res.status(500).send("Error submitting answer");
   }
 };

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var answersController = require("../controllers/answersController.js");
+const { ensureAuthenticated } = require("../middleware/auth.js");
 
 router.post(
   "/questions/:questionId/answers",

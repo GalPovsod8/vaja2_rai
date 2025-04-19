@@ -12,7 +12,9 @@ const questionSchema = new Schema({
   votes: { type: Number, default: 0 },
   answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
   acceptedAnswer: { type: Schema.Types.ObjectId, ref: "Answer" },
-  hotness: { type: Number, default: 0 }, // For hot questions calculation
+  hotness: { type: Number, default: 0 },
+  votes: { type: Number, default: 0 },
+  voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 // Update hotness score when question is saved

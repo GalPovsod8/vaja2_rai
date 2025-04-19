@@ -9,6 +9,10 @@ router.get("/ask", ensureAuthenticated, (req, res) => {
   res.render("questions/create");
 });
 
+router.post("/:id/answers", ensureAuthenticated, questionController.postAnswer);
+
+router.post("/:id/vote/ajax", ensureAuthenticated, questionController.voteAjax);
+
 router.get("/hot", questionController.hotQuestions);
 
 router.get("/:id", questionController.showQuestion);

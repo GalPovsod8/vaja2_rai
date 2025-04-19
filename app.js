@@ -95,8 +95,8 @@ const userRouter = require("./routes/userRoutes");
 app.use("/users", userRouter);
 const questionRouter = require("./routes/questionRoutes");
 app.use("/questions", questionRouter);
-// const answerRouter = require("./routes/answerRoutes");
-// app.use("/", answerRouter);
+const answerRouter = require("./routes/answerRoutes");
+app.use("/answers", answerRouter);
 
 // Error handlers
 app.use(function (req, res, next) {

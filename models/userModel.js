@@ -8,6 +8,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   profileImage: { type: String, default: "default.jpg" },
   createdAt: { type: Date, default: Date.now },
+  questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
+  answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
   stats: {
     questionsAsked: { type: Number, default: 0 },
     answersGiven: { type: Number, default: 0 },
