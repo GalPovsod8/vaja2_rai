@@ -1,0 +1,48 @@
+<section class="hot-questions">
+  <div class="container">
+    <h1>Hot Questions</h1>
+    <p>Most active questions in the last 24 hours</p>
+    
+    <div class="questions-list">
+      {{#each questions}}
+        <div class="question-card">
+          <div class="hotness-indicator" style="width: {{hotness}}%"></div>
+          <div class="question-stats">
+            <div class="votes">
+              <span>{{votes}}</span>
+              <small>votes</small>
+            </div>
+            <div class="answers {{#if acceptedAnswer}}has-accepted{{/if}}">
+              <span>{{answers.length}}</span>
+              <small>answers</small>
+            </div>
+            <div class="views">
+              <span>{{views}}</span>
+              <small>views</small>
+            </div>
+          </div>
+          <div class="question-content">
+            <h3><a href="/questions/{{_id}}">{{title}}</a></h3>
+            <p>{{truncate content 150}}</p>
+            <div class="question-footer">
+              <div class="tags">
+                {{#each tags}}
+                  <span class="tag">{{this}}</span>
+                {{/each}}
+              </div>
+              <div class="author-info">
+                <small>Asked {{formatDate createdAt}}</small>
+                <div class="author">
+                  <img src="{{author.profileImage}}" alt="{{author.username}}" width="32" height="32">
+                  <a href="/users/{{author._id}}">{{author.username}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <p>No hot questions right now.</p>
+      {{/each}}
+    </div>
+  </div>
+</section>

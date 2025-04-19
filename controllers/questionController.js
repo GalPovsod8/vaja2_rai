@@ -10,10 +10,9 @@ exports.listQuestions = async (req, res) => {
     res.render("questions/list", { questions });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server Error: napaka pri pridobivanju vprašanj");
+    res.status(500).send("Server Error: Error fetching questions");
   }
 };
-
 exports.showQuestion = async (req, res) => {
   try {
     const question = await Question.findByIdAndUpdate(
@@ -46,12 +45,11 @@ exports.showQuestion = async (req, res) => {
 
 exports.createQuestion = async (req, res) => {
   try {
-    const { title, content, tags } = req.body;
+    const { title, content } = req.body;
     const question = new Question({
       title,
       content,
       author: req.user._id,
-      tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
     });
 
     await question.save();

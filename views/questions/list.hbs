@@ -1,0 +1,56 @@
+<section class="questions-section">
+  <div class="container">
+    <div class="questions-header">
+      <h1>All Questions</h1>
+      {{#if user}}
+        <a href="/questions/ask" class="mainBtn">Ask Question</a>
+      {{else}}
+        <a href="/auth/login" class="mainBtn">Login to Ask Question</a>
+      {{/if}}
+    </div>
+
+    <div class="questions-list">
+      {{#each questions}}
+        <div class="question-card">
+          <div class="question-aside">
+            <a href="/voteUp">&uparrow;</a>
+            <span>{{votes}}</span>
+            <a href="/voteDown">&downarrow;</a>
+          </div>
+          <div class="question-inner">
+            <div class="question-content">
+              <h3><a href="/questions/{{_id}}">{{title}}</a></h3>
+              <p>{{truncate content 150}}</p>
+            </div>
+            <div class="question-footer">
+              <div class="question-stats">
+                <div class="answers {{#if acceptedAnswer}}has-accepted{{/if}}">
+                  <span>{{answers.length}}</span>
+                  <small>answers</small>
+                </div>
+                <div class="views">
+                  <span>{{views}}</span>
+                  <small>views</small>
+                </div>
+              </div>
+                <div class="author-info">
+                <small>Asked {{formatDate createdAt}}</small>
+                <a class="author" href="/users/{{author._id}}">
+                  <img
+                    src="{{author.profileImage}}"
+                    alt="{{author.username}}"
+                    width="32"
+                    height="32"
+                  />
+                  <p>{{author.username}}</p>  
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <p>No questions yet. Be the first to ask!</p>
+      </div>
+      {{/each}}
+  </div>
+</section>

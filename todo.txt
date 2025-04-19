@@ -1,0 +1,7 @@
+login - ✅
+logout - ✅
+register - ✅
+aks question - 
+edit question -
+mark answear as answeared
+show profile - 

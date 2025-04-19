@@ -37,6 +37,7 @@ exports.showRegister = (req, res) => {
 exports.register = (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
+      console.log("to je problem");
       return res.render("auth/register", { error: err.message });
     }
 
@@ -67,15 +68,21 @@ exports.showLogin = (req, res) => {
   res.render("auth/login");
 };
 
-exports.login = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/login",
-  failureFlash: true,
-});
+exports.login = (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/auth/login",
+    failureFlash: true,
+  })(req, res, next);
+};
 
-exports.logout = (req, res) => {
-  req.logout();
-  res.redirect("/");
+exports.logout = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 };
 
 exports.showProfile = async (req, res) => {

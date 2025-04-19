@@ -1,0 +1,77 @@
+<section class="user-profile">
+  <div class="container">
+    <div class="profile-header">
+      <div class="avatar">
+        <img src="{{user.profileImage}}" alt="{{user.username}}" width="150" height="150">
+        {{#if (eq user._id ../user._id)}}
+          <form action="/users/{{user._id}}" method="POST" enctype="multipart/form-data" class="avatar-form">
+            <input type="file" name="profileImage" id="profileImage" accept="image/*">
+            <label for="profileImage" class="btn btn-small">Change Avatar</label>
+            <button type="submit" class="btn btn-small btn-primary">Update</button>
+          </form>
+        {{/if}}
+      </div>
+      <div class="profile-info">
+        <h1>{{user.username}}</h1>
+        <p>Member since {{formatDate user.createdAt}}</p>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">{{user.stats.reputation}}</span>
+            <span class="stat-label">reputation</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{{user.stats.questionsAsked}}</span>
+            <span class="stat-label">questions</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{{user.stats.answersGiven}}</span>
+            <span class="stat-label">answers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{{user.stats.acceptedAnswers}}</span>
+            <span class="stat-label">accepted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="profile-content">
+      <div class="profile-section">
+        <h2>Recent Questions</h2>
+        {{#if user.questions.length}}
+          <div class="questions-list">
+            {{#each user.questions}}
+              <div class="question-item">
+                <h3><a href="/questions/{{_id}}">{{title}}</a></h3>
+                <small>Asked {{formatDate createdAt}}</small>
+              </div>
+            {{/each}}
+          </div>
+          <a href="#" class="btn btn-more">View all questions</a>
+        {{else}}
+          <p>No questions yet.</p>
+        {{/if}}
+      </div>
+      
+      <div class="profile-section">
+        <h2>Recent Answers</h2>
+        {{#if user.answers.length}}
+          <div class="answers-list">
+            {{#each user.answers}}
+              <div class="answer-item">
+                <p>{{truncate content 100}}</p>
+                <small>Answered on <a href="/questions/{{question._id}}">{{question.title}}</a> {{formatDate createdAt}}</small>
+                {{#if isAccepted}}
+                  <span class="badge accepted">Accepted</span>
+                {{/if}}
+              </div>
+            {{/each}}
+          </div>
+          <a href="#" class="btn btn-more">View all answers</a>
+        {{else}}
+          <p>No answers yet.</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</section>

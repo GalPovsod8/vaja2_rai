@@ -1,6 +1,6 @@
 var express = require("express");
+var authController = require("../controllers/authController");
 var router = express.Router();
-var authController = require("../controllers/authController.js");
 
 router.get("/register", authController.showRegister);
 router.post("/register", authController.register);

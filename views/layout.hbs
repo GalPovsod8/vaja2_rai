@@ -1,22 +1,31 @@
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon" />
   </head>
   <header>
-    <a class="logo">
+    <a href="/" class="logo">
       <img src="/images/favicon.png" alt="SU" />
       <p href="/">Stack<strong>Underflow</strong></p>
     </a>
     <nav>
       <a href="/questions">Questions</a>
       {{#if user}}
-        <a href="/ask">Ask a question</a>
-        <a href="/logout">Logout</a>
-        <a href="/login">Login</a>
+        <a href="/questions/ask">Ask a question</a>
+        <a href="/auth/logout">Logout</a>
+        <a class="user-info" href="/users/{{user._id}}">
+          <img
+            src="{{user.profileImage}}"
+            alt="{{user.username}}"
+            width="32"
+            height="32"
+          />
+        </a>
       {{else}}
-        <a href="/register">Register</a>
+        <a href="/auth/login">Login</a>
       {{/if}}
     </nav>
   </header>

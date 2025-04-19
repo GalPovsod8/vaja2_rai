@@ -1,0 +1,101 @@
+<section class="question-detail">
+  <div class="container">
+    <div class="question">
+      <div class="question-header">
+        <h1>{{question.title}}</h1>
+        <div class="question-meta">
+          <span>Asked {{formatDate question.createdAt}}</span>
+          <span>Viewed {{question.views}} times</span>
+        </div>
+      </div>
+      
+      <div class="question-body">
+        <div class="vote-controls">
+          <button class="vote-btn upvote"><i class="fas fa-arrow-up"></i></button>
+          <span class="votes-count">{{question.votes}}</span>
+          <button class="vote-btn downvote"><i class="fas fa-arrow-down"></i></button>
+          {{#if (eq user._id question.author._id)}}
+            <button class="bookmark-btn"><i class="fas fa-check"></i> Accept</button>
+          {{/if}}
+        </div>
+        
+        <div class="question-content">
+          <p>{{question.content}}</p>
+          <div class="question-tags">
+            {{#each question.tags}}
+              <span class="tag">{{this}}</span>
+            {{/each}}
+          </div>
+          
+          <div class="question-author">
+            <div class="author-card">
+              <small>Asked by</small>
+              <div class="author-info">
+                <img src="{{question.author.profileImage}}" alt="{{question.author.username}}" width="32" height="32">
+                <a href="/users/{{question.author._id}}">{{question.author.username}}</a>
+              </div>
+              <div class="author-stats">
+                <span>{{question.author.stats.reputation}} reputation</span>
+                <span>{{question.author.stats.questionsAsked}} questions</span>
+                <span>{{question.author.stats.answersGiven}} answers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="answers-section">
+      <h2>{{question.answers.length}} Answers</h2>
+      
+      {{#each question.answers}}
+        <div class="answer {{#if isAccepted}}accepted-answer{{/if}}" id="answer-{{_id}}">
+          <div class="vote-controls">
+            <button class="vote-btn upvote"><i class="fas fa-arrow-up"></i></button>
+            <span class="votes-count">{{votes}}</span>
+            <button class="vote-btn downvote"><i class="fas fa-arrow-down"></i></button>
+            {{#if (eq ../user._id ../question.author._id)}}
+              <form action="/answers/{{_id}}/accept" method="POST" class="accept-form">
+                <button type="submit" class="accept-btn {{#if isAccepted}}accepted{{/if}}">
+                  <i class="fas fa-check"></i>
+                </button>
+              </form>
+            {{/if}}
+          </div>
+          
+          <div class="answer-content">
+            <p>{{content}}</p>
+            <div class="answer-author">
+              <div class="author-card">
+                <small>Answered {{formatDate createdAt}}</small>
+                <div class="author-info">
+                  <img src="{{author.profileImage}}" alt="{{author.username}}" width="32" height="32">
+                  <a href="/users/{{author._id}}">{{author.username}}</a>
+                </div>
+                <div class="author-stats">
+                  <span>{{author.stats.reputation}} reputation</span>
+                  <span>{{author.stats.answersGiven}} answers</span>
+                  <span>{{author.stats.acceptedAnswers}} accepted</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    
+    {{#if user}}
+      <div class="answer-form">
+        <h3>Your Answer</h3>
+        <form action="/questions/{{question._id}}/answers" method="POST">
+          <textarea name="content" rows="10" required></textarea>
+          <button type="submit" class="btn btn-primary">Post Your Answer</button>
+        </form>
+      </div>
+    {{else}}
+      <div class="login-prompt">
+        <p><a href="/login">Login</a> to post an answer</p>
+      </div>
+    {{/if}}
+  </div>
+</section>
